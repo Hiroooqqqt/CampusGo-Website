@@ -1,0 +1,85 @@
+body {
+    background-image: url(background/background_log_in.png);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    display: flex;
+    flex-direction: column; 
+    justify-content: space-between; 
+    align-items: left; 
+    height: 100%; 
+    width: 100%; 
+}
+
+.logo {
+    margin-top: 60px;
+    max-width: 100px; 
+    margin-bottom: 20px; 
+    margin-left: 110px;
+}
+
+.info-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #333;
+    width: 100%;
+}
+
+.form-box {
+    background-color: rgba(255, 255, 255, 0.3);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 400px;
+    text-align: center;
+}
+
+input[type="text"], input[type="password"] {
+    color: #333;
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    box-sizing: border-box;
+}
+
+.btn-login {
+    margin-top: 20px;
+    height: 50px;
+    width: 100%;
+    border: none;
+    background-color: #c90060;
+    color: aliceblue;
+    border-radius: 50px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-login:hover {
+    background-color: #a5003f;
+}
+
+.link{
+    color: #333;
+}
+
+.remember-me {
+    display: flex;
+    align-items: left;
+    margin: 10px 0;
+}
+
+.SignUp{
+    color: blue;
+    cursor: pointer;
+}
