@@ -42,7 +42,7 @@ $usersResult = $conn->query($usersSql);
                 <th>Name</th>
                 <th>Email</th>
                 <th>Role</th>
-                <th>Actions</th>
+                <th>Action</th>
             </tr>
             <?php while ($row = $usersResult->fetch_assoc()) { ?>
             <tr data-id="<?php echo $row['id']; ?>">
