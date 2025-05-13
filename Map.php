@@ -45,7 +45,7 @@ function showHelp(topic) {
             <ul>
                 <li>Clear your browser cache</li>
                 <li>Ensure JavaScript is enabled</li>
-                <li>Still stuck? Contact support@campusgo.com</li>
+                <li>Still stuck? Contact campusgo2024@gmail.com</li>
             </ul>
         `;
     }
