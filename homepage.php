@@ -26,7 +26,7 @@ $userName = isset($_SESSION['name']) ? $_SESSION['name'] : 'User';
 
     <div class="icons-section">
         <div class="icon navv" onclick="window.location.href='Map.php'"><img src="Icons/Nav.png" alt="Navigation Icon"></div>
-        <div class="icon qrr" onclick="window.location.href='qr_code.php'"><img src="Icons/Qr.png" alt="QR Code Icon"></div>
+        <div class="icon qrr" onclick="window.location.href='qr_code.php'"><img src="Icons/profile_pic.png" alt="QR Code Icon"></div>
 
         <?php if ($userRole == 'teacher'): ?>
             <div class="icon sri" onclick="window.location.href='roomManagerUI.php'"><img src="Icons/searchRoomIcon.png" alt="Search Icon"></div>
