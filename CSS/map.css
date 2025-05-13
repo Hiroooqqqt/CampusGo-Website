@@ -134,4 +134,8 @@ body {
     font-weight: bold;
 }
 
+#help-content {
+    max-height: 70vh;
+    overflow-y: auto;
+}
 
