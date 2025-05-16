@@ -50,7 +50,13 @@ $usersResult = $conn->query($usersSql);
                 <td contenteditable="true" onblur="updateUser(this, 'id_number')"><?php echo htmlspecialchars($row['id_number']); ?></td>
                 <td contenteditable="true" onblur="updateUser(this, 'name')"><?php echo htmlspecialchars($row['name']); ?></td>
                 <td contenteditable="true" onblur="updateUser(this, 'email')"><?php echo htmlspecialchars($row['email']); ?></td>
-                <td contenteditable="true" onblur="updateUser(this, 'role')"><?php echo htmlspecialchars($row['role']); ?></td>
+                <td>
+                    <select onchange="updateUserSelect(this, 'role')">
+                        <option value="admin" <?php if($row['role'] === 'admin') echo 'selected'; ?>>admin</option>
+                        <option value="teacher" <?php if($row['role'] === 'teacher') echo 'selected'; ?>>teacher</option>
+                        <option value="student" <?php if($row['role'] === 'student') echo 'selected'; ?>>student</option>
+                    </select>
+                </td>
                 <td><a href="deleteUser.php?id=<?php echo $row['id']; ?>">Delete</a></td>
             </tr>
             <?php } ?>
@@ -59,11 +65,31 @@ $usersResult = $conn->query($usersSql);
         <a href="logout.php">Logout</a>
     </div>
 </body>
+
 <script>
 function updateUser(cell, column) {
     const row = cell.parentElement;
     const id = row.getAttribute('data-id');
     const value = cell.innerText.trim();
+
+    fetch('updateUser.php', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/x-www-form-urlencoded'},
+        body: `id=${id}&column=${column}&value=${encodeURIComponent(value)}`
+    })
+    .then(res => res.text())
+    .then(data => {
+        console.log('Update result:', data);
+    })
+    .catch(error => {
+        console.error('Error:', error);
+    });
+}
+
+function updateUserSelect(select, column) {
+    const row = select.closest('tr');
+    const id = row.getAttribute('data-id');
+    const value = select.value;
 
     fetch('updateUser.php', {
         method: 'POST',
