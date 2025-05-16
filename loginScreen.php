@@ -71,7 +71,7 @@ if (isset($_SESSION['role'])) {
     <div class="info-container">
         <div class="form-box">
             <form onsubmit="loginUser(event)">
-                <input type="text" id="email" placeholder="ID number or Email" required><br>
+                <input type="text" id="email" placeholder="Email" required><br>
                 <input type="password" id="password" placeholder="Password" required><br>
                 
                 <div class="remember-me">

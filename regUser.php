@@ -141,14 +141,14 @@
             <span class="close" onclick="closeModal()">&times;</span>
             <h3>Terms and Conditions for Student Portal</h3>
             <p><strong>Effective Date: <span id="effectiveDate">[Insert Date]</span></strong></p>
-            <p>Welcome to the Student Portal of [Your School/Organization Name] (“we,” “our,” or “us”). By accessing or using this portal, you agree to be bound by the following Terms and Conditions. Please read them carefully.</p>
+            <p>Welcome to CampusGo of Bulacan State University - Meneses Campus. By accessing or using this portal, you agree to be bound by the following Terms and Conditions. Please read them carefully.</p>
 
             <ol>
                 <li><strong>Acceptance of Terms</strong><br>
                     By logging in and using the Student Portal, you agree to comply with and be bound by these Terms and Conditions. If you do not agree, please do not use the portal.
                 </li>
                 <li><strong>Eligibility</strong><br>
-                    Only officially enrolled students, authorized faculty, and staff of [School Name] are permitted to access this portal.
+                    Only officially enrolled students, authorized faculty, and staff of Bulacan State University - Meneses Campus are permitted to access this portal.
                 </li>
                 <li><strong>User Account and Responsibility</strong><br>
                     You are responsible for maintaining the confidentiality of your login credentials. You agree to notify the administration immediately of any unauthorized use of your account. Misuse of your account (e.g., impersonating others or accessing restricted areas) may result in disciplinary action.
@@ -184,9 +184,6 @@
                 </li>
                 <li><strong>Termination of Access</strong><br>
                     We reserve the right to suspend or terminate your access to the portal for violations of these Terms, academic misconduct, or other applicable policies.
-                </li>
-                <li><strong>Governing Law</strong><br>
-                    These Terms are governed by the laws of Bulacan State University - Meneses Campus, and any disputes shall be resolved in accordance with those laws.
                 </li>
             </ol>
 
