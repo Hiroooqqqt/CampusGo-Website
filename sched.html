@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Schedule Page</title>
+
+  
+  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
+
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+    }
+    #calendar {
+      max-width: 800px;
+      margin: 40px auto;
+      padding: 10px;
+      border: 1px solid #ccc;
+    }
+    .modal {
+      display: none;
+      position: fixed;
+      z-index: 999;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0,0,0,0.5);
+    }
+    .modal-content {
+      background: #fff;
+      padding: 20px;
+      margin: 10% auto;
+      width: 300px;
+      border-radius: 8px;
+    }
+    .modal-content h3 {
+      margin-top: 0;
+    }
+    .form-group {
+      margin-bottom: 10px;
+    }
+    label {
+      display: block;
+      font-weight: bold;
+      margin-bottom: 4px;
+    }
+    select, input[type="text"], input[type="time"] {
+      width: 100%;
+      padding: 6px;
+    }
+    .modal-buttons {
+      margin-top: 15px;
+      display: flex;
+      justify-content: space-between;
+    }
+  </style>
+</head>
+<body>
+
+  <h1 style="text-align:center">Schedule Page</h1>
+  <div id="calendar"></div>
+
+  
+  <div class="modal" id="eventModal">
+    <div class="modal-content">
+      <h3>Add Event</h3>
+      <form id="eventForm">
+        <div class="form-group">
+          <label for="eventTitle">Title:</label>
+          <input type="text" id="eventTitle" required />
+        </div>
+        <div class="form-group">
+          <label for="startTime">Start Time:</label>
+          <input type="time" id="startTime" required />
+        </div>
+        <div class="form-group">
+          <label for="endTime">End Time:</label>
+          <input type="time" id="endTime" required />
+        </div>
+        <div class="modal-buttons">
+          <button type="submit">Add</button>
+          <button type="button" onclick="closeModal()">Cancel</button>
+        </div>
+        <input type="hidden" id="selectedDate" />
+      </form>
+    </div>
+  </div>
+
+  
+  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+
+  <script>
+    let calendar;
+
+    document.addEventListener('DOMContentLoaded', function () {
+      const calendarEl = document.getElementById('calendar');
+
+      calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        headerToolbar: {
+          left: 'prev,next today',
+          center: 'title',
+          right: 'dayGridMonth,timeGridWeek,timeGridDay'
+        },
+        events: 'fetch_sched_events.php',
+        dateClick: function(info) {
+          openModal(info.dateStr);
+        }
+      });
+
+      calendar.render();
+    });
+
+    function openModal(dateStr) {
+      document.getElementById('selectedDate').value = dateStr;
+      document.getElementById('eventTitle').value = '';
+      document.getElementById('startTime').value = '';
+      document.getElementById('endTime').value = '';
+      document.getElementById('eventModal').style.display = 'block';
+    }
+
+    function closeModal() {
+      document.getElementById('eventModal').style.display = 'none';
+    }
+
+    
+    document.getElementById('eventForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      const title = document.getElementById('eventTitle').value;
+      const date = document.getElementById('selectedDate').value;
+      const startTime = document.getElementById('startTime').value;
+      const endTime = document.getElementById('endTime').value;
+
+      const start = `${date}T${startTime}`;
+      const end = `${date}T${endTime}`;
+
+      fetch('add_events.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ title, start, end })
+      })
+      .then(res => res.json())
+      .then(data => {
+        if (data.success) {
+          closeModal();
+          calendar.refetchEvents();
+        } else {
+          alert('Failed to add event.');
+        }
+      });
+    });
+  </script>
+</body>
+</html>
