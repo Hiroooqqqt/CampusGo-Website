@@ -24,6 +24,11 @@ if (isset($_SESSION['role'])) {
     <title>CampusGo</title>
     <link rel="stylesheet" href="CSS/loginScreen.css">
     <script>
+        function displayError(message) {
+            const errorMessage = document.getElementById('error-message');
+            errorMessage.textContent = message;
+        }
+
         function loginUser(e) {
             e.preventDefault();
 
@@ -32,7 +37,7 @@ if (isset($_SESSION['role'])) {
             const remember = document.getElementById('remember').checked;
 
             if (!email || !password) {
-                alert('Please fill in both email and password.');
+                displayError('Please fill in both email and password.');
                 return;
             }
 
@@ -44,16 +49,16 @@ if (isset($_SESSION['role'])) {
                 if (xhr.status === 200) {
                     const response = xhr.responseText.trim();
                     if (response === "student") {
-                        window.location.href = "homepage.php"; 
+                        window.location.href = "roomStatus.php";
                     } else if (response === "teacher") {
-                        window.location.href = "homepage.php"; 
+                        window.location.href = "roomManagerUI.php";
                     } else if (response === "admin") {
-                        window.location.href = "admin.php"; 
+                        window.location.href = "admin.php";
                     } else {
-                        alert("Login failed: " + response); 
+                        displayError("Login failed: " + response);
                     }
                 } else {
-                    alert("Server error: " + xhr.status); 
+                    displayError("Server error: " + xhr.status);
                 }
             };
 
@@ -78,13 +83,16 @@ if (isset($_SESSION['role'])) {
                     <input type="checkbox" id="remember" name="remember">
                     <label for="remember">Remember Me</label>
                 </div>
-                
+
+                <!-- Inline error display -->
+                <div id="error-message" style="color: red; margin-top: 10px;"></div>
+
                 <br>
-                
+
                 <button class="btn-login">Log In</button>
-                
+
                 <br><br><br>
-                
+
                 <div class="link">
                     No account? <a class="SignUp" href="regUser.php" style="cursor: pointer;"> Click here </a> to sign up.
                 </div>
