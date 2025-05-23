@@ -40,136 +40,150 @@ $conn->close();
 
   <style>
     body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: url('background/background_log_in.png') no-repeat center center fixed;
-      background-color: rgb(228, 223, 208);
-      background-size: cover;
-      color: white;
-      height: 100vh;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-    }
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: url('background/background_log_in.png') no-repeat center center fixed;
+  background-color: rgb(228, 223, 208);
+  background-size: cover;
+  color: white;
+  min-height: 100vh;
+  overflow-y: auto;
+}
 
-    .layout {
-      display: flex;
-      gap: 20px;
-      max-width: 1200px;
-      width: 100%;
-      padding: 20px;
-      box-sizing: border-box;
-    }
+.layout {
+  display: flex;
+  flex-direction: row;
+  align-items: stretch; /* key fix for equal height */
+  gap: 20px;
+  max-width: 1200px;
+  width: 100%;
+  margin: 40px auto;
+  padding: 20px;
+  box-sizing: border-box;
+  background-color: rgba(0, 0, 0, 0.4);
+  border-radius: 12px;
+}
 
-    .calendar-section {
-      flex: 1;
-      max-width: 800px;
-      display: flex;
-      flex-direction: column;
-    }
+.calendar-section {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
 
-    .schedule-section {
-      width: 300px;
-      background-color: rgba(255, 255, 255, 0.1);
-      padding: 20px;
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-      color: white;
-      overflow-y: auto;
-      max-height: 80vh;
-    }
+.schedule-section {
+  width: 300px;
+  background-color: rgba(255, 255, 255, 0.1);
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+  color: white;
+  box-sizing: border-box;
+  overflow-y: auto;
+}
 
-    #calendar {
-      flex: 1;
-      padding: 10px;
-      background-color: rgba(255, 182, 193, 0.4);
-      border-radius: 10px;
-      box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-      border: 1px solid #ccc;
-      box-sizing: border-box;
-    }
+h1, h2 {
+  margin: 0 0 10px;
+}
 
-    .fc-theme-standard td,
-    .fc-theme-standard th,
-    .fc .fc-scrollgrid {
-      background-color: rgba(255, 182, 193, 0.4);
-    }
+#calendar {
+  flex: 1;
+  background-color: rgba(255, 182, 193, 0.4);
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+  border: 1px solid #ccc;
+  padding: 10px;
+  height: 100%;
+  box-sizing: border-box;
+}
 
-    /* Back button styling */
-    .back-button {
-      margin-bottom: 10px;
-      padding: 8px 15px;
-      border-radius: 5px;
-      border: none;
-      background-color: #ff69b4;
-      color: white;
-      cursor: pointer;
-      width: fit-content;
-      font-size: 16px;
-    }
 
-    .event-item {
-      margin-bottom: 10px;
-    }
+.fc-theme-standard td,
+.fc-theme-standard th,
+.fc .fc-scrollgrid {
+  background-color: rgba(255, 182, 193, 0.4);
+}
 
-    .event-title {
-      font-weight: bold;
-    }
+.back-button {
+  padding: 8px 15px;
+  border-radius: 5px;
+  border: none;
+  background-color: #ff69b4;
+  color: white;
+  cursor: pointer;
+  width: fit-content;
+  font-size: 16px;
+}
 
-    /* Modal styling */
-    #eventModal {
-      display: none;
-      position: fixed;
-      top: 0; left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: rgba(0,0,0,0.6);
-      justify-content: center;
-      align-items: center;
-      z-index: 9999;
-    }
-    #eventModal form {
-      background: #fff;
-      padding: 20px;
-      border-radius: 8px;
-      color: #000;
-      width: 300px;
-      display: flex;
-      flex-direction: column;
-      gap: 10px;
-    }
-    #eventModal label {
-      display: flex;
-      flex-direction: column;
-      font-weight: 600;
-      font-size: 14px;
-    }
-    #eventModal input[type="text"],
-    #eventModal input[type="datetime-local"] {
-      padding: 6px;
-      margin-top: 4px;
-      font-size: 14px;
-    }
-    #eventModal button {
-      padding: 8px 12px;
-      font-size: 14px;
-      cursor: pointer;
-      border-radius: 5px;
-      border: none;
-    }
-    #cancelBtn {
-      background-color: #ccc;
-      color: #000;
-    }
-    #eventModal button[type="submit"] {
-      background-color: #ff69b4;
-      color: white;
-    }
-    #eventModal div.buttons {
-      display: flex;
-      justify-content: flex-end;
-      gap: 10px;
-    }
+.event-item {
+  margin-bottom: 10px;
+}
+
+.event-title {
+  font-weight: bold;
+}
+
+/* Modal styling */
+#eventModal {
+  display: none;
+  position: fixed;
+  top: 0; left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.6);
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+#eventModal form {
+  background: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  color: #000;
+  width: 300px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+#eventModal label {
+  display: flex;
+  flex-direction: column;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+#eventModal input[type="text"],
+#eventModal input[type="datetime-local"] {
+  padding: 6px;
+  margin-top: 4px;
+  font-size: 14px;
+}
+
+#eventModal button {
+  padding: 8px 12px;
+  font-size: 14px;
+  cursor: pointer;
+  border-radius: 5px;
+  border: none;
+}
+
+#cancelBtn {
+  background-color: #ccc;
+  color: #000;
+}
+
+#eventModal button[type="submit"] {
+  background-color: #ff69b4;
+  color: white;
+}
+
+#eventModal .buttons {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
   </style>
 </head>
 <body data-role="<?= htmlspecialchars($role) ?>">
