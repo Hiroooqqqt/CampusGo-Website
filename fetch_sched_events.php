@@ -1,15 +1,11 @@
 <?php
-// pang debug
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
+header('Content-Type: application/json');
 
-// konek ba, konek
 $host = 'localhost';
-$user = 'root';      
-$pass = '';      
-$dbname = 'campusgodb';    
+$user = 'root';
+$pass = '';
+$dbname = 'campusgodb';
 
-// Connect den
 $conn = new mysqli($host, $user, $pass, $dbname);
 
 if ($conn->connect_error) {
@@ -18,16 +14,15 @@ if ($conn->connect_error) {
     exit;
 }
 
-// filter nganii
-$start = isset($_GET['start']) ? $_GET['start'] : null;
-$end = isset($_GET['end']) ? $_GET['end'] : null;
+$start = $_GET['start'] ?? null;
+$end = $_GET['end'] ?? null;
 
-$sql = "SELECT id, title, start, end FROM events";
 if ($start && $end) {
-    $sql .= " WHERE (start >= ? AND end <= ?)";
+    $sql = "SELECT id, title, start, end FROM events WHERE start >= ? AND end <= ?";
     $stmt = $conn->prepare($sql);
     $stmt->bind_param('ss', $start, $end);
 } else {
+    $sql = "SELECT id, title, start, end FROM events";
     $stmt = $conn->prepare($sql);
 }
 
@@ -44,8 +39,6 @@ while ($row = $result->fetch_assoc()) {
     ];
 }
 
-
-header('Content-Type: application/json');
 echo json_encode($events);
 
 $stmt->close();

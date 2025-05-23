@@ -1,149 +1,70 @@
+<?php
+session_start();
+$userRole = isset($_SESSION['role']) ? $_SESSION['role'] : 'student';
+$userName = isset($_SESSION['name']) ? $_SESSION['name'] : 'Guest';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Schedule Page</title>
-
-  <!-- FullCalendar CSS -->
-  <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.css" rel="stylesheet" />
-
- <style>
-  body {
-  margin: 0;
-  font-family: Arial, sans-serif;
-  background: url('background/background_log_in.png') no-repeat center center fixed;
-  background-color: rgb(228, 223, 208);
-  background-size: cover;
-  color: white;
-  height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-}
-
-.layout {
-  display: flex;
-  justify-content: center; 
-  align-items: stretch;       
-  gap: 20px;                
-  max-width: 1200px;          
-  width: 100%;
-  padding: 20px;
-  box-sizing: border-box;
-}
-
-.calendar-section {
-  flex: 1;
-  max-width: 800px;
-  display: flex;
-  flex-direction: column;
-}
-
- .schedule-section {
-    width: 300px;
-    margin-left: 20px;
-    background-color: rgba(255, 255, 255, 0.1);
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 4px 10px rgba(0,0,0,0.4);
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start;
-    height: calendar-section;
-  }
-
-.schedule-section h2, 
-.schedule-section ul {
-  color: white;
-  text-align: left;
-}
-
-#calendar {
-  flex: 1;
-  width: 100%;
-  padding: 10px;
-  background-color: rgba(255, 182, 193, 0.4);
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-  border: 1px solid #ccc;
-  box-sizing: border-box;
-}
-
-.fc-theme-standard td, 
-.fc-theme-standard th,
-.fc .fc-scrollgrid {
-  background-color: rgba(255, 182, 193, 0.4);
-}
-</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Screen</title>
+    <link rel="stylesheet" href="CSS/homepage.css">
 </head>
 <body>
-  <div class="layout">
-    <div class="calendar-section">
-      <h1>Schedule Page</h1>
-      <div id="calendar"></div>
+    <div class="logo-section">
+        <img src="background/Logo.png" alt="Logo" class="logo">
     </div>
 
-    <div class="schedule-section">
-      <h2>Schedule</h2>
-      <ul>
-        <li>Event 1: 10:00 AM - 11:00 AM</li>
-        <li>Event 2: 11:30 AM - 12:30 PM</li>
-        <li>Event 3: 1:00 PM - 2:00 PM</li>
-      </ul>
+    <div class="container">
+        <div class="greeting">
+    <h1>Hello, <?php echo htmlspecialchars($userRole); ?></h1>
+    <h3><?php echo htmlspecialchars($userName); ?></h3>
+    <p id="date-time"></p>
+</div>
+
     </div>
-  </div>
 
-  <!-- FullCalendar JS -->
-  <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
+    <div class="icons-section">
+        <div class="icon navv" onclick="window.location.href='Map.php'"><img src="Icons/help.png" alt="Navigation Icon"></div>
+        <div class="icon qrr" onclick="window.location.href='qr_code.php'"><img src="Icons/profile_pic.png" alt="QR Code Icon"></div>
 
-  <script>
-    document.addEventListener('DOMContentLoaded', function () {
-      const calendarEl = document.getElementById('calendar');
+        <?php if ($userRole == 'teacher'): ?>
+            <div class="icon sri" onclick="window.location.href='roomManagerUI.php'"><img src="Icons/searchRoomIcon.png" alt="Search Icon"></div>
+        <?php else: ?>
+            <div class="icon sri" onclick="window.location.href='roomStatus.php'"><img src="Icons/searchRoomIcon.png" alt="Search Icon"></div>
+        <?php endif; ?>
+    </div>
 
-      const calendar = new FullCalendar.Calendar(calendarEl, {
-        initialView: 'dayGridMonth',
-        headerToolbar: {
-          left: 'prev,next today',
-          center: 'title',
-          right: 'dayGridMonth,timeGridWeek,timeGridDay'
-        },
-        events: 'fetch-events.php',
-        dateClick: function(info) {
-          const title = prompt('Enter event title:');
-          if (title) {
-            const eventData = {
-              title: title,
-              start: info.dateStr,
-              end: info.dateStr
-            };
+    <div class="hamburger-menu">
+        <div class="hamburger" onclick="toggleMenu()">
+            <div class="line"></div>
+            <div class="line"></div>
+            <div class="line"></div>
+        </div>
+        <div class="menu" id="menu">
+          <a href="calendar.php" class="calendar">Calendar</a><br>
+            <a href="logout.php" class="logout">Log out</a><br>
+            
+        </div>
+    </div>
 
-            fetch('add-event.php', {
-              method: 'POST',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(eventData)
-            })
-            .then(response => {
-              if (!response.ok) throw new Error('Network response was not ok');
-              return response.json();
-            })
-            .then(data => {
-              if (data.success) {
-                calendar.refetchEvents();
-              } else {
-                alert('Failed to add event.');
-              }
-            })
-            .catch(error => {
-              console.error('Fetch error:', error);
-              alert('Error adding event.');
-            });
-          }
+    <script>
+        function updateDateTime() {
+            const now = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long', hour: '2-digit', minute: '2-digit', hour12: true };
+            const dateTimeString = now.toLocaleString('en-US', options);
+            document.getElementById('date-time').innerText = dateTimeString;
         }
-      });
 
-      calendar.render();
-    });
-  </script>
+        setInterval(updateDateTime, 1000);
+        updateDateTime(); 
+
+        function toggleMenu() {
+            var menu = document.getElementById('menu');
+            menu.style.display = (menu.style.display === 'none' || menu.style.display === '') ? 'block' : 'none';
+        }
+    </script>
 </body>
 </html>

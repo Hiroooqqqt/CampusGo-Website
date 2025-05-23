@@ -1,301 +1,285 @@
+<?php
+include 'connect.php';
+session_start();
+$name = isset($_SESSION['name']) ? $_SESSION['name'] : 'Guest';
+$role = isset($_SESSION['role']) ? $_SESSION['role'] : 'Unknown';
+?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <title>Room Manager - CampusGo</title>
     <style>
-        .class-info {
-            font-size: 0.9em;
-            color: #555;
-            margin-top: 5px;
-            line-height: 1.4em;
-        }
-
-        .class-duration,
-        .class-instructor {
-            display: block;
-        }
-
         body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            background-image: url('background/background_home.png');
-            background-size: cover;
-            background-position: center;
-            background-attachment: fixed;
-            background-color: #f4f7fa;
-        }
+     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    margin: 0;
+    background-image: url('background/background_home.png');
+    background-size: cover;
+    background-attachment: fixed;
+}
 
-        .container {
-            max-width: 800px;
-            margin: auto;
-            background: rgba(255, 255, 255, 0.8);
-            padding: 30px;
-            border-radius: 12px;
-            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
-        }
+.sidebar {
+    width: 300px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    background: rgba(30, 30, 30, 0.95);
+    color: #fff;
+    padding: 25px;
+    box-sizing: border-box;
+    box-shadow: 4px 0 15px rgba(0,0,0,0.2);
+    overflow-y: auto;
+}
 
-        h1 {
-            text-align: center;
-            color: #333;
-            font-size: 2em;
-            margin-bottom: 20px;
-        }
+.sidebar h3 {
+    margin-top: 0;
+    font-size: 1.5em;
+    border-bottom: 2px solid #555;
+    padding-bottom: 5px;
+}
 
-        ul.room-list {
-            list-style: none;
-            padding: 0;
-        }
+.sidebar p, .sidebar label {
+    margin: 10px 0 5px;
+    font-size: 1em;
+}
 
-        li.room-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 15px 20px;
-            border-bottom: 1px solid #ccc;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
+.sidebar input {
+    width: 100%;
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    margin-bottom: 10px;
+    font-size: 1em;
+}
 
-        li.room-item:hover {
-            background-color: #f1f1f1;
-        }
+.sidebar button {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 8px;
+    border: none;
+    font-size: 1em;
+    font-weight: bold;
+    background-color: #28a745;
+    color: white;
+    transition: background-color 0.3s;
+}
 
-        .room-name {
-            font-weight: bold;
-            font-size: 1.1em;
-            color: #333;
-        }
+.sidebar button:hover {
+    background-color: #218838;
+}
 
-        .toggle-wrapper {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
+.back-button {
+    background-color: #007bff;
+    margin-top: 10px;
+}
 
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 60px;
-            height: 34px;
-        }
+.back-button:hover {
+    background-color: #0056b3;
+}
 
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
+.container {
+     margin-left: 300px;
+    padding: 40px;
+    overflow-y: auto;
+    height: 100vh;
+}
 
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0; left: 0;
-            right: 0; bottom: 0;
-            background-color: #28a745;
-            transition: 0.4s;
-            border-radius: 34px;
-        }
+h1 {
+    text-align: center;
+    color: #fff;
+    margin-bottom: 30px;
+}
 
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 26px; width: 26px;
-            left: 4px; bottom: 4px;
-            background-color: white;
-            transition: 0.4s;
-            border-radius: 50%;
-        }
+ul.room-list {
+    list-style: none;
+    padding: 0;
+    margin: 0 auto;
+    max-width: 800px;
+}
 
-        input:checked + .slider {
-            background-color: #dc3545;
-        }
+li.room-item {
+    padding: 20px;
+    margin-bottom: 15px;
+    background-color: #fff;
+    border-radius: 10px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
 
-        input:checked + .slider:before {
-            transform: translateX(26px);
-        }
+li.room-item:hover {
+    background-color: #f5f5f5;
+    transform: translateY(-2px);
+}
 
-        .slider.occupied {
-            background-color: #dc3545 !important;
-        }
+.room-name {
+    font-weight: bold;
+    font-size: 1.2em;
+    margin-bottom: 5px;
+}
 
-        .slider.available {
-            background-color: #28a745 !important;
-        }
+.room-meta div {
+    margin-top: 4px;
+    font-size: 0.95em;
+    color: #555;
+}
 
-        .status-label {
-            font-weight: bold;
-            color: #555;
-            font-size: 1.1em;
-        }
+.status-label {
+    font-weight: bold;
+}
 
-        .back-button {
-            margin-top: 30px;
-            display: block;
-            padding: 12px 24px;
-            background: #007bff;
-            color: white;
-            border: none;
-            border-radius: 8px;
-            cursor: pointer;
-            text-align: center;
-            font-size: 1em;
-            transition: background-color 0.3s ease;
-        }
+.status-available {
+    color: #28a745;
+}
 
-        .back-button:hover {
-            background-color: #0056b3;
-        }
+.status-occupied {
+    color: #dc3545;
+}
 
-        .duration-input {
-            padding: 3px 6px;
-            font-size: 0.9em;
-            margin-top: 4px;
-            border: 1px solid #ccc;
-            border-radius: 4px;
-        }
+.locked {
+    background-color: #f8d7da;
+    cursor: not-allowed;
+}
+
     </style>
 </head>
-<body data-role="<?php echo $_SESSION['role']; ?>">
-<div class="container">
-    <h1>Manage Room Status</h1>
-    <ul class="room-list" id="room-list"></ul>
-    <button class="back-button" onclick="window.location.href='homepage.php'">Back</button>
-</div>
+<body>
+    <div class="sidebar">
+        <h3>Welcome</h3>
+        <p><strong>Name:</strong> <?= htmlspecialchars($name) ?></p>
+        <p><strong>Role:</strong> <?= htmlspecialchars($role) ?></p>
 
-<script>
-    document.addEventListener("DOMContentLoaded", function () {
-        const roomList = document.getElementById('room-list');
-        const role = document.body.getAttribute('data-role');
+        <label>Room:</label>
+        <input type="text" id="roomNameInput" readonly>
+        <label>Duration:</label>
+        <input type="text" id="durationInput" placeholder="e.g. 2 hours">
+        <label>Instructor:</label>
+        <input type="text" id="instructorInput" value="<?= htmlspecialchars($name) ?>">
+        <input type="hidden" id="roomIdInput">
 
-        fetch('get_rooms.php')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                return response.json();
-            })
-            .then(rooms => {
-                rooms.forEach(room => {
-                    const roomItem = createRoomItem(room, role);
-                    roomList.appendChild(roomItem);
+        <button id="saveButton">Save to Selected Room</button>
+        <button class="back-button" onclick="makeRoomAvailable()">Set Available</button>
+        <button class="back-button" onclick="window.location.href='homepage.php'">Back</button>
+    </div>
+
+    <div class="container">
+        <h1>Manage Room Status</h1>
+        <ul class="room-list" id="room-list"></ul>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        let selectedRoomId = null;
+
+        document.addEventListener("DOMContentLoaded", function () {
+            fetch('get_rooms.php')
+                .then(res => res.json())
+                .then(rooms => {
+                    const roomList = document.getElementById('room-list');
+                    rooms.forEach(room => {
+                        const li = document.createElement('li');
+                        li.className = 'room-item';
+                        li.dataset.roomId = room.id;
+                        li.dataset.roomName = room.name;
+                        li.dataset.status = room.status;
+                        li.dataset.instructor = room.instructor;
+                        li.dataset.duration = room.duration;
+
+                        const nameSpan = document.createElement('div');
+                        nameSpan.className = 'room-name';
+                        nameSpan.textContent = room.name;
+
+                        const metaDiv = document.createElement('div');
+                        metaDiv.className = 'room-meta';
+                        metaDiv.innerHTML = `
+                            <div><strong>Status:</strong> <span class="${room.status.toLowerCase() === 'occupied' ? 'status-occupied' : 'status-available'}">${room.status}</span></div>
+                            <div><strong>Instructor in use:</strong> ${room.instructor || '—'}</div>
+                            <div><strong>Duration:</strong> ${room.duration || '—'}</div>
+                        `;
+
+                        li.appendChild(nameSpan);
+                        li.appendChild(metaDiv);
+
+                        li.addEventListener('click', () => {
+                            if (room.status.toLowerCase() === 'occupied') {
+                                alert('Room is currently occupied.');
+                            }
+
+                            selectedRoomId = room.id;
+                            document.getElementById('roomNameInput').value = room.name;
+                            document.getElementById('roomIdInput').value = room.id;
+                            document.getElementById('durationInput').value = room.duration || '';
+                            document.getElementById('instructorInput').value = room.instructor || '<?= htmlspecialchars($name) ?>';
+                        });
+
+                        if (room.status.toLowerCase() === 'occupied') {
+                            li.classList.add('locked');
+                        }
+
+                        roomList.appendChild(li);
+                    });
                 });
-            })
-            .catch(error => {
-                console.error("Error fetching rooms:", error);
-                roomList.innerHTML = '<li style="color: red;">Error loading rooms. Please try again later.</li>';
-            });
-    });
-
-    function createRoomItem(room, role) {
-        const li = document.createElement('li');
-        li.className = 'room-item';
-
-        const leftSide = document.createElement('div');
-
-        const roomName = document.createElement('span');
-        roomName.className = 'room-name';
-        roomName.textContent = room.name;
-
-        const classInfo = document.createElement('div');
-        classInfo.className = 'class-info';
-
-        const instructorSpan = document.createElement('span');
-        instructorSpan.className = 'class-instructor';
-        instructorSpan.textContent = `Instructor: ${room.instructor || 'N/A'}`;
-
-        const durationWrapper = document.createElement('span');
-        durationWrapper.className = 'class-duration';
-
-        if (role === 'teacher' || role === 'admin') {
-            const input = document.createElement('input');
-            input.type = 'text';
-            input.value = room.duration || '';
-            input.className = 'duration-input';
-            input.addEventListener('blur', () => {
-                room.duration = input.value;
-                updateRoom(room);
-            });
-            durationWrapper.textContent = 'Duration: ';
-            durationWrapper.appendChild(input);
-        } else {
-            durationWrapper.textContent = `Duration: ${room.duration || 'N/A'}`;
-        }
-
-        classInfo.appendChild(instructorSpan);
-        classInfo.appendChild(durationWrapper);
-
-        leftSide.appendChild(roomName);
-        leftSide.appendChild(classInfo);
-
-        const toggle = createToggleWrapper(room, role);
-
-        li.appendChild(leftSide);
-        li.appendChild(toggle);
-
-        return li;
-    }
-
-    function createToggleWrapper(room, role) {
-        const wrapper = document.createElement('div');
-        wrapper.className = 'toggle-wrapper';
-
-        const statusLabel = document.createElement('span');
-        statusLabel.className = 'status-label';
-        statusLabel.textContent = room.status;
-
-        const switchLabel = document.createElement('label');
-        switchLabel.className = 'switch';
-
-        const toggleInput = document.createElement('input');
-        toggleInput.type = 'checkbox';
-        toggleInput.checked = room.status === 'Occupied';
-
-        const slider = document.createElement('span');
-        slider.className = 'slider';
-        slider.classList.add(room.status === 'Occupied' ? 'occupied' : 'available');
-
-        toggleInput.addEventListener('change', () => {
-            const newStatus = toggleInput.checked ? 'Occupied' : 'Available';
-            if ((role === 'teacher' || role === 'admin') && newStatus === 'Available') {
-                room.instructor = prompt('Enter your name as the instructor:', room.instructor || '') || room.instructor;
-            }
-            room.status = newStatus;
-            updateRoom(room, toggleInput, slider, statusLabel);
         });
 
-        switchLabel.appendChild(toggleInput);
-        switchLabel.appendChild(slider);
-        wrapper.appendChild(statusLabel);
-        wrapper.appendChild(switchLabel);
+        document.getElementById('saveButton').addEventListener('click', () => {
+            const roomId = document.getElementById('roomIdInput').value;
+            const duration = document.getElementById('durationInput').value.trim();
+            const instructor = document.getElementById('instructorInput').value.trim();
 
-        return wrapper;
-    }
+            if (!roomId) {
+                alert("Select a room first.");
+                return;
+            }
 
-    function updateRoom(room, toggleInput = null, slider = null, statusLabel = null) {
-        fetch('get_rooms.php', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
-            body: `room_id=${room.id}&status=${room.status}&instructor=${encodeURIComponent(room.instructor || '')}&duration=${encodeURIComponent(room.duration || '')}`
-        })
-            .then(res => res.json())
-            .then(result => {
-                if (result.status === 'success') {
-                    if (statusLabel) statusLabel.textContent = room.status;
-                    if (slider) {
-                        slider.className = 'slider';
-                        slider.classList.add(room.status === 'Occupied' ? 'occupied' : 'available');
-                    }
-                } else {
-                    alert(`Error updating room: ${result.message}`);
-                    if (toggleInput) toggleInput.checked = !toggleInput.checked;
-                }
+            if (!duration) {
+                alert("Please enter a duration.");
+                return;
+            }
+
+            fetch('update_room.php', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: `room_id=${roomId}&status=Occupied&instructor=${encodeURIComponent(instructor)}&duration=${encodeURIComponent(duration)}`
             })
-            .catch(() => {
-                alert('Network error. Please try again.');
-                if (toggleInput) toggleInput.checked = !toggleInput.checked;
+            .then(res => res.text())
+            .then(response => {
+                if (response.trim() === 'success') {
+                    alert("Room updated!");
+                    window.location.reload();
+                } else {
+                    alert("Update failed: " + response);
+                }
             });
-    }
-</script>
+        });
+
+        function makeRoomAvailable() {
+            const roomId = document.getElementById('roomIdInput').value;
+
+            if (!roomId) {
+                alert("Select a room first.");
+                return;
+            }
+
+            $.ajax({
+                url: 'update_status.php',
+                type: 'POST',
+                data: { roomId },
+                success: function(response) {
+                    if (response.trim() === 'success') {
+                        alert("Room set to available.");
+                        location.reload();
+                    } else if (response.trim() === 'unauthorized') {
+                        alert("Unauthorized to clear this room.");
+                    } else {
+                        alert("Failed to update status.");
+                    }
+                }
+            });
+        }
+    </script>
 </body>
 </html>
