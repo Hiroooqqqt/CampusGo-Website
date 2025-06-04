@@ -4,7 +4,78 @@
     <title>CampusGo</title>
     <link rel="stylesheet" href="CSS/regUser.css">
     <style>
-        .modal {
+        body {
+    background-image: url(background/background_log_in.png);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    display: flex;
+    flex-direction: column; 
+    justify-content: space-between; 
+    align-items: left; 
+    height: 100%; 
+    width: 100%; 
+}
+
+.logo {
+    margin-top: 60px;
+    max-width: 100px; 
+    margin-bottom: 20px; 
+    margin-left: 110px;
+}
+
+.info-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    color: #333;
+    width: 100%;
+}
+
+.form-box {
+    background-color: rgba(255, 255, 255, 0.3);
+    padding: 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 400px;
+    text-align: center;
+}
+
+input[type="text"], input[type="password"] {
+    color: #333;
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    box-sizing: border-box;
+}
+
+.btn-login {
+    margin-top: 20px;
+    height: 50px;
+    width: 100%;
+    border: none;
+    background-color: #c90060;
+    color: aliceblue;
+    border-radius: 50px;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.btn-login:hover {
+    background-color: #a5003f;
+}
+
+            .modal {
             display: none;
             position: fixed;
             z-index: 999;
@@ -81,7 +152,6 @@
         }
     </style>
     <script>
-   
         function showTermsModal(e) {
             e.preventDefault();
 
@@ -93,27 +163,20 @@
                 return;
             }
 
-           
             const currentDate = new Date();
             const formattedDate = currentDate.toLocaleString();  
-
             document.getElementById('effectiveDate').textContent = formattedDate;
-
-            
             document.getElementById('termsModal').style.display = 'block';
         }
 
-       
         function closeModal() {
             document.getElementById('termsModal').style.display = 'none';
         }
 
-       
         function acceptTermsAndRegister() {
-
             closeModal();
-            const registerForm = document.getElementById('registerForm');
-            registerForm.submit();
+            document.getElementById('registerForm').submit();
+            window.location.href = "loginpage.php";
         }
     </script>
 </head>
@@ -125,18 +188,19 @@
     </div>
     <div class="info-container">
         <div class="form-box">
-            <form id="registerForm" onsubmit="showTermsModal(event)">
-                <input type="text" id="name" placeholder="Full Name" required><br>
-                <input type="text" id="Identification" placeholder="Identification Number" required><br>
-                <input type="text" id="email" placeholder="Email" required><br>
-                <input type="password" id="password" placeholder="Password" required><br>
+            <form id="registerForm" action="register_user.php" method="POST" onsubmit="showTermsModal(event)">
+                <input type="text" id="name" name="name" placeholder="Full Name" required><br>
+                <input type="text" id="Identification" name="Identification" placeholder="Identification Number" required><br>
+                <input type="text" id="email" name="email" placeholder="Email" required><br>
+                <input type="password" id="password" name="password" placeholder="Password" required><br>
                 <input type="password" id="confPassword" placeholder="Confirm Password" required><br>
                 <button class="btn-login" type="submit">Register</button>
             </form>
         </div>
     </div>
 
-    <div id="termsModal" class="modal">
+    
+<div id="termsModal" class="modal">
         <div class="modal-content">
             <span class="close" onclick="closeModal()">&times;</span>
             <h3>Terms and Conditions for Student Portal</h3>
@@ -186,13 +250,13 @@
                     We reserve the right to suspend or terminate your access to the portal for violations of these Terms, academic misconduct, or other applicable policies.
                 </li>
             </ol>
-
             <div class="modal-buttons">
                 <button onclick="closeModal()">Cancel</button>
                 <button onclick="acceptTermsAndRegister()">I Accept</button>
             </div>
         </div>
     </div>
-
 </body>
 </html>
+
+

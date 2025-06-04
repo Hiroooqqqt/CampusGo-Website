@@ -165,7 +165,7 @@ $userName = isset($_SESSION['name']) ? $_SESSION['name'] : 'Guest';
       <div class="icon qrr" onclick="window.location.href='qr_code.php'">
           <img src="Icons/profile_pic.png" alt="QR Code Icon">
       </div>
-      <?php if ($userRole == 'teacher'): ?>
+      <?php if ($userRole == 'teacher' || $userRole == 'admin'): ?>
           <div class="icon sri" onclick="window.location.href='roomManagerUI.php'">
               <img src="Icons/searchRoomIcon.png" alt="Search Icon">
           </div>

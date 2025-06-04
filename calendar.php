@@ -258,7 +258,7 @@ h1, h2 {
         },
         events: 'fetch_sched_events.php',
         dateClick: function(info) {
-          if (role !== 'teacher') return;
+          if (role !== 'teacher' && role !== 'admin') return;
 
           // Show modal and prefill start/end datetime-local inputs with clicked date + default times
           modal.style.display = 'flex';

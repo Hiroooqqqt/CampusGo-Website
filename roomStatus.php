@@ -108,7 +108,7 @@ $roomsResult = $conn->query($roomsSql);
             });
         }
 
-        setInterval(refreshTable, 2000);
+        setInterval(refreshTable, 1000);
     </script>
 </head>
 

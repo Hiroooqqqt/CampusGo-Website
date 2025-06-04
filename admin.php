@@ -2,7 +2,7 @@
 session_start();
 include 'connect.php';
 
-if (!isset($_SESSION['user_id']) || $_SESSION['role'] !== 'admin') {
+if (!isset($_SESSION['user_id']) && $_SESSION['role'] !== 'admin') {
     header('Location: loginScreen.php');
     exit();
 }
@@ -63,6 +63,8 @@ $usersResult = $conn->query($usersSql);
         </table>
 
         <a href="logout.php">Logout</a>
+        <br>
+        <a href="homepage.php">Go to dashboard</a>
     </div>
 </body>
 

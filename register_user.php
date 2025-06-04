@@ -15,6 +15,7 @@ if (mysqli_num_rows($check) > 0) {
 $query = "INSERT INTO users (name, id_number, email, password, role) VALUES ('$name', '$id_number', '$email', '$password', 'student')";
 
 if (mysqli_query($conn, $query)) {
+    header("Location: loginScreen.php");
     echo "success";
 } else {
     echo "error: " . mysqli_error($conn);
